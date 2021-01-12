@@ -555,9 +555,9 @@ def gettext(string, **variables):
     """
     t = get_translations()
     if t is None:
-        return string.format(**variables) % variables
+        return string.format(**variables).replace("%", "%%") % variables
     s = t.ugettext(string)
-    return s.format(**variables) % variables
+    return s.format(**variables).replace("%", "%%") % variables
 _ = gettext
 
 
@@ -577,10 +577,10 @@ def ngettext(singular, plural, num, **variables):
     t = get_translations()
     if t is None:
         s = singular if num == 1 else plural
-        return s.format(**variables) % variables
+        return s.format(**variables).replace("%", "%%") % variables
 
     s = t.ungettext(singular, plural, num)
-    return s.format(**variables) % variables
+    return s.format(**variables).replace("%", "%%") % variables
 
 
 def pgettext(context, string, **variables):
@@ -590,9 +590,9 @@ def pgettext(context, string, **variables):
     """
     t = get_translations()
     if t is None:
-        return string.format(**variables) % variables
+        return string.format(**variables).replace("%", "%%") % variables
     s = t.upgettext(context, string)
-    return s.format(**variables) % variables
+    return s.format(**variables).replace("%", "%%") % variables
 
 
 def npgettext(context, singular, plural, num, **variables):
@@ -604,9 +604,9 @@ def npgettext(context, singular, plural, num, **variables):
     t = get_translations()
     if t is None:
         s = singular if num == 1 else plural
-        return s.format(**variables) % variables
+        return s.format(**variables).replace("%", "%%") % variables
     s = t.unpgettext(context, singular, plural, num)
-    return s.format(**variables) % variables
+    return s.format(**variables).replace("%", "%%") % variables
 
 
 def lazy_gettext(string, **variables):

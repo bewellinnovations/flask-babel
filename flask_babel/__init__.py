@@ -10,6 +10,7 @@
 """
 from __future__ import absolute_import
 import os
+import re
 
 from datetime import datetime
 from contextlib import contextmanager
@@ -205,6 +206,19 @@ class Babel(object):
                 yield path
             else:
                 yield os.path.join(self.app.root_path, path)
+
+
+def _escape_percent(string):
+    """
+    Escape single percentage sign.
+
+    Args:
+        string (str): any string
+
+    Returns:
+        str: string with escaped single percentage signs
+    """
+    return re.sub(r"(?<!\%)\%{1}(?!\%)", "%%", string)
 
 
 def get_translations():
@@ -555,9 +569,9 @@ def gettext(string, **variables):
     """
     t = get_translations()
     if t is None:
-        return string.format(**variables).replace("%", "%%") % variables
+        return _escape_percent(string.format(**variables)) % variables
     s = t.ugettext(string)
-    return s.format(**variables).replace("%", "%%") % variables
+    return _escape_percent(s.format(**variables)) % variables
 _ = gettext
 
 
@@ -577,10 +591,10 @@ def ngettext(singular, plural, num, **variables):
     t = get_translations()
     if t is None:
         s = singular if num == 1 else plural
-        return s.format(**variables).replace("%", "%%") % variables
+        return _escape_percent(s.format(**variables)) % variables
 
     s = t.ungettext(singular, plural, num)
-    return s.format(**variables).replace("%", "%%") % variables
+    return _escape_percent(s.format(**variables)) % variables
 
 
 def pgettext(context, string, **variables):
@@ -590,9 +604,9 @@ def pgettext(context, string, **variables):
     """
     t = get_translations()
     if t is None:
-        return string.format(**variables).replace("%", "%%") % variables
+        return _escape_percent(string.format(**variables)) % variables
     s = t.upgettext(context, string)
-    return s.format(**variables).replace("%", "%%") % variables
+    return _escape_percent(s.format(**variables)) % variables
 
 
 def npgettext(context, singular, plural, num, **variables):
@@ -604,9 +618,9 @@ def npgettext(context, singular, plural, num, **variables):
     t = get_translations()
     if t is None:
         s = singular if num == 1 else plural
-        return s.format(**variables).replace("%", "%%") % variables
+        return _escape_percent(s.format(**variables)) % variables
     s = t.unpgettext(context, singular, plural, num)
-    return s.format(**variables).replace("%", "%%") % variables
+    return _escape_percent(s.format(**variables)) % variables
 
 
 def lazy_gettext(string, **variables):
